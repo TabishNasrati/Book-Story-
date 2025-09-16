@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/single.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Document</title>
+</head>
+<body>
+
+    
+
+  
+    <div class="logo">
+      <h1>📚 Book Story</h1>
+    </div>
+    <form action="/search" method="GET" class="search-bar">
+    <input type="text" name="q" placeholder="Search books..." required >
+     
+    </form>
+
+    <!-- 
+      <  input type="text" name="q" placeholder="Search books..." required >
+      -->
+  
+  
+
+  <br>
+
+      <div class="container">
+        <div class="book-header">
+          <img id="bookImage" src="./susan-q-yin-2JIvboGLeho-unsplash.jpg" alt="Book Cover">
+          <div class="book-info">
+            <h2 id="bookTitle">Sample Book Title</h2>
+            <p><strong>Author:</strong> <span id="bookAuthor">Tabish </span></p>
+            <p><strong>Category:</strong> <span id="bookCategory">Gold </span></p>
+            <p><strong>Pages:</strong> <span id="bookPages">300</span></p>
+    
+            <div class="actions">
+              <a id="downloadLink" target="_blank">
+                <button class="btn btn-primary">📖 Start Reading</button>
+              </a>
+              <button class="btn btn-outline" id="Download">Download</button>
+            </div>
+          </div>
+        </div>
+    
+        <section class="description-wrapper">
+          <h3>Book Summary</h3>
+          <div class="description" id="description">
+            <p>This is a sample summary text of the book. Here you can add details such as story, theme, highlights, and key insights. It demonstrates the expand/collapse feature.</p>
+            <p>You can replace this with your actual book content. If the text is long, clicking “Show More” will expand the section.</p>
+          </div>
+          <button class="show-more" id="toggleDesc">Show More</button>
+        </section>
+    
+        <section class="reviews" id="reviews">
+          <h3>Reader Reviews</h3>
+          <div class="review">Amazing book, very engaging — John</div>
+          <div class="review">Loved the flow of the story.— Sarah</div>
+    
+          <form id="reviewForm">
+            <textarea id="reviewText" rows="3" placeholder="Write your review..."></textarea>
+            <div class="actions">
+              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="button" id="clearReview" class="btn btn-outline">Clear</button>
+            </div>
+          </form>
+        </section>
+      </div>
+
+      <br>   
+     
+                <!--   Footer  -->   
+      <footer class="footer">
+        <div class="footer-container">
+          
+          <div class="footer-logo">
+            <h2>📚 Book Story</h2>
+            <p>Your digital library for endless reading.</p>
+          </div>
+
+          <div class="footer-links">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="#">Categories</a></li>
+              <li><a href="#">Best Sellers</a></li>
+              <li><a href="#">Contact</a></li>
+            </ul>
+          </div>
+
+
+
+          <div class="footer-contact">
+            <h4>Contact</h4>
+            <ul>
+              <li> Phone: 0744779041</li>
+              <li> Email: tabishnasrati12@gmail.com </li>
+            </ul>
+          </div>
+
+
+
+          <div class="footer-social">
+            <h4>Follow Us</h4>
+            <div class="social-icons">
+              <a href="#"><i class='bx bxl-facebook'></i></a>
+              <a href="#"><i class='bx bxl-instagram'></i></a>
+              <a href="#"><i class='bx bxl-twitter'></i></a>
+              <a href="#"><i class='bx bxl-linkedin'></i></a>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="footer-bottom">
+          <p>© 2025 Book Story. All Rights Reserved.</p>
+        </div>
+      </footer>
+
+         
+
+      <script src="/scripts/single.js"></script>
+    
+    
+</body>
+</html>

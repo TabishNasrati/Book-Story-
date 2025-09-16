@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Book Story</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1 class="welcome">📚 Welcome to Book Story 📚</h1>
+    <div class="form-box">
+      <!-- Login Form -->
+      <form id="loginForm" class="form active" action="/login" method="POST">
+        <h2>Login</h2>
+        <div class="input-group">
+          <input type="email" name="email" id="loginEmail" required />
+          <label for="loginEmail">Email</label>
+        </div>
+        <div class="input-group">
+          <input type="password" name="password" id="loginPassword" required />
+          <label for="loginPassword">Password</label>
+        </div>
+        <button type="submit" class="btn">Login</button>
+        <p class="switch">Don't have an account? 
+          <a href="/register" id="showRegister">Register</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/scripts.js"></script>
+</body>
+</html>
+
+
+
