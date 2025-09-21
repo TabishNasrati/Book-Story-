@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         <h2>${book.title}</h2>
         <p>${book.author}</p>
         <p>${book.category}</p>
-        <a href="/single?id=${book.id}" target="_self">View Details</a>
+        <a href="/single?id=${book.id}" target="_self" class="view-details-btn" >View Details</a>
       `;
       container.appendChild(card);
     });

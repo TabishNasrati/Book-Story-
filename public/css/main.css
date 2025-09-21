@@ -110,27 +110,48 @@ body {
 
 
 .allidcards {
-  
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  row-gap: 2%;
-  padding: 50px 30px;
+  justify-content: center;
+  gap: 20px;
+  grid-template-columns: repeat(5 , 1fr);
+  padding:40px  20px;
+  max-width:1200px ;
+  margin: 0 auto;
+
+  /* display:grid;
+  justify-content: center;
+  grid-template-columns: 300px 300px 300px 300px; 
+  padding: 0;
   margin-left: 60px;
   box-sizing: border-box;
+  flex-wrap: wrap;
+  column-gap: 0px;
+  row-gap:20px ;
+   */
+ 
 }
   
 .id-card {
-  position: relative;
+  background-color: #f1f1f1;
+  border: 1px solid black;
+  padding: 20px  10px;
+  font-size: 30px;
+  text-align: center;
+  border-radius: 20px;
+
+
+  /* position: relative;
   width: 70%;           
   max-width: 500%;
   height: 310px;
-  background: linear-gradient(145deg, #ffffff, #f5f7fa);
+  background: linear-gradient(145deg, #d8d3d3, #f5f7fa);
   border-radius: 16px;
   box-shadow: 0 24px 34px rgba(0,0,0,0.15);
   padding: 15px 10px;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   overflow: hidden;
+   */
  
   
 }
@@ -143,7 +164,7 @@ body {
 .id-card img {
   width: 150px;
   height: 130px;
-  border-radius: 0%;
+  border-radius: 10%;
   object-fit: cover;
   margin-bottom: 15px;
   
@@ -212,6 +233,18 @@ body {
     padding: 20px 10px;
   }
 }
+
+
+@media (max-width: 600px) {
+  .id-card {
+    grid-template-columns: 1fr;
+    row-gap: 5px;
+    column-gap: 5px;
+    margin-left: 10px;
+    padding: 20px 10px;
+  }
+}
+
 /*  foooter  */
 
 .footer-section {
@@ -280,6 +313,25 @@ body {
     font-size: 13px;
   }
 }
+
+
+.view-details-btn {
+  display: inline-block;
+  padding: 8px 16px;
+  background: linear-gradient(120deg, #67c0b9, #071422);
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s;
+  font-size: 12px;
+}
+
+.view-details-btn:hover {
+  background: linear-gradient(120deg, #071422, #67c0b9);
+  transform: scale(1.05);
+}
+
 
 
 

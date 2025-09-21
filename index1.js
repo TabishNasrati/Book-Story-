@@ -35,7 +35,8 @@ app.get('/', (req, res) => res.redirect('/main'));
 app.get('/login', (req, res) => res.render('login'));
 app.get('/register', (req, res) => res.render('register'));
 app.get('/main', (req, res) => res.render('main'));
-app.get('/single', (req, res) => res.render('single')); // مسیر single page
+app.get('/single', (req, res) => res.render('single')); 
+
 
 // Auth
 app.post('/register', async (req, res) => {
@@ -63,17 +64,27 @@ app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
     const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-    if (result.rows.length > 0) {
-      const user = result.rows[0];
-      const match = await bcrypt.compare(password, user.password);
-      if (match) return res.redirect('/main');
+    const user = result.rows[0];
+    if (!user) {
+      return res.status(401).send('Invalid credentials');
     }
-    res.send('Invalid email or password');
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      return res.status(401).send('Invalid credentials');
+    }
+    req.session.userId = user.id;
+    req.session.role = user.role;
+    if (user.role === 'admin') {
+      return res.redirect('/admin/dashboard');
+    } else {
+      return res.redirect('/user/home');
+    }
   } catch (err) {
-    console.error(err);
-    res.send('Error logging in');
+    console.error('Login error:', err);
+    res.status(500).send('Server error');
   }
 });
+
 
 // API
 app.get('/api/books', async (req, res) => {
@@ -98,31 +109,26 @@ app.get('/api/book/:id', async (req, res) => {
   }
 });
 
-// Reviews (اختیاری)
+
 app.post('/api/book/:id/review', async (req, res) => {
   const { id } = req.params;
   const { text } = req.body;
-  // اگر دیتابیس review دارید، اینجا INSERT کنید
-  res.json({ text }); // فقط برای تست JS
+  
+  res.json({ text }); 
 });
 
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
 
+app.get('/download/:filename', (req, res) => {
+  const { filename } = req.params;
+  const filePath = path.join(__dirname, 'public', 'downloads', filename);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  res.download(filePath, filename, err => {
+    if (err) {
+      console.error("Download error:", err);
+      res.status(500).send("Error downloading file");
+    }
+  });
+});
 
 
 

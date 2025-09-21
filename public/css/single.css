@@ -93,6 +93,7 @@ body {
   margin-top: 12px;
   display: flex;
   gap: 12px;
+ 
 }
 
 .btn {
@@ -102,6 +103,7 @@ body {
   cursor: pointer;
   font-size: 14px;
   transition: 0.3s;
+  text-decoration: none;
 }
 
 .btn-primary {
