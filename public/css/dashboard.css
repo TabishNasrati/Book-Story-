@@ -1,0 +1,101 @@
+html, body {
+    direction: ltr;
+    font-family: "Segoe UI", Tahoma, Arial, "Helvetica Neue", sans-serif;
+    background: #f4f6f9;
+    color: #222;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .wrapper {
+    gap: 0;
+  }
+  
+  
+  .sidebar {
+    height: 100vh;
+    width: 260px;
+    min-width: 200px;
+    max-width: 320px;
+    background: linear-gradient(120deg, #67c0b9, #071422);
+    color: #fff;
+    box-shadow: 4px 0 18px rgba(2,6,23,0.25);
+    position: relative;
+    transition: all .25s ease;
+  }
+  
+  .sidebar .nav-link {
+    color: rgba(255,255,255,0.92);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background .15s ease, transform .08s ease;
+  }
+  .sidebar .nav-link:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateX(-4px);
+    text-decoration: none;
+  }
+  
+  .sidebar-footer {
+    color: rgba(255,255,255,0.6);
+    padding: 12px 0;
+  }
+  
+  
+  .page {
+    background: transparent;
+    padding: 28px;
+  }
+  
+  
+  .stat-card {
+    border: 0;
+    background: linear-gradient(180deg, #fff, #fafafa);
+    border-radius: 12px;
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  }
+  
+  .card {
+    border-radius: 12px;
+  }
+  
+  h3, h5 { 
+    color: #0b2540; 
+    font-weight: 600; 
+  }
+  .card-title { color: #0b2540; }
+  
+  
+  @media (max-width: 991px) {
+    .sidebar {
+      position: fixed;
+      left: -280px; 
+      top: 0;
+      height: 100%;
+      z-index: 1040;
+    }
+    .wrapper {
+      position: relative;
+    }
+    .page {
+      padding: 18px;
+    }
+  }
+  
+  @media (max-width: 575px) {
+    .stat-card .card-text { font-size: 1.05rem; }
+    .page { padding: 12px; }
+  }
+  
