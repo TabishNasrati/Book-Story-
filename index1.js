@@ -7,6 +7,7 @@ import session from "express-session";
 import pgSession from "connect-pg-simple";
 import dotenv from "dotenv";
 import multer from "multer";
+import { render } from "ejs";
 
 dotenv.config();
 const { Pool } = pkg;
@@ -68,6 +69,9 @@ app.get("/login", (req, res) => res.render("login"));
 app.get("/register", (req, res) => res.render("register"));
 app.get("/main", (req, res) => res.render("main"));
 app.get("/single", (req, res) => res.render("single"));
+app.get("/dashboard", (req, res) => res.render("dashboard"));
+app.get("/auther", (req, res) => res.render("Auther"));
+
 
 // ---------------- Authentication ----------------
 app.post("/register", async (req, res) => {
@@ -163,6 +167,22 @@ app.get("/admin/dashboard", requireLogin, requireAdmin, async (req, res) => {
 });
 
 
+
+app.get('/api/admin/authors', requireLogin, requireAdmin, async (req, res) => {
+  try {
+   
+
+    res.render("auther", {
+
+    })
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error fetching authors" });
+  }
+});
+
+
 // Admin Stats API
 app.get('/api/admin/stats', requireLogin, requireAdmin, async (req, res) => {
   try {
@@ -249,28 +269,78 @@ app.get("/single/:id", async (req, res) => {
 
 
 
+// ---------------- Admin Activity API ----------------
 app.get('/api/admin/activity', requireLogin, requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT 
-        TO_CHAR(date_trunc('month', viewed_at), 'Mon YYYY') AS month, 
-        COUNT(*) AS total_views
-      FROM book_views
-      GROUP BY month
-      ORDER BY date_trunc('month', viewed_at)
-      LIMIT 6;
+      SELECT TO_CHAR(date_trunc('month', created_at), 'Mon') AS month,
+             SUM(views) AS total_views
+      FROM books
+      GROUP BY date_trunc('month', created_at)
+      ORDER BY date_trunc('month', created_at)
     `);
 
     res.json(result.rows);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
+    console.error("Error fetching activity data:", err);
+    res.status(500).json({ error: "Server error fetching activity" });
   }
 });
 
 
 
-// ---------------- Start Server ----------------
+
+// ---------------- Authors API ----------------
+// گرفتن همه Authors
+
+
+// اضافه کردن Author جدید
+app.post('/api/admin/authors', requireLogin, requireAdmin, async (req, res) => {
+  const { name, email } = req.body;
+  try {
+    const result = await pool.query(
+      "INSERT INTO authors (name, email) VALUES ($1, $2) RETURNING *",
+      [name, email]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error adding author" });
+  }
+});
+
+// ویرایش Author
+app.put('/api/admin/authors/:id', requireLogin, requireAdmin, async (req, res) => {
+  const { id } = req.params;
+  const { name, email } = req.body;
+  try {
+    const result = await pool.query(
+      "UPDATE authors SET name=$1, email=$2 WHERE id=$3 RETURNING *",
+      [name, email, id]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error updating author" });
+  }
+});
+
+// حذف Author
+app.delete('/api/admin/authors/:id', requireLogin, requireAdmin, async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query("DELETE FROM authors WHERE id=$1", [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error deleting author" });
+  }
+});
+
+
+
+
+
 app.listen(PORT, () =>
   console.log(`🚀 Server running on http://localhost:${PORT}`)
 );
