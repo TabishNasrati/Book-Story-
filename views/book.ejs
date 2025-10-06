@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book Story - Books</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/css/book.css">
+</head>
+<body>
+
+<div class="d-flex min-vh-100 wrapper">
+
+  <!-- Sidebar -->
+  <aside class="sidebar d-flex flex-column p-3 text-white">
+    <div class="brand text-center mb-3">
+      <h2 class="m-0">📚 Books</h2>
+    </div>
+    <hr class="divider">
+
+    <ul class="nav nav-pills flex-column mb-auto">
+      <li class="nav-item"><a href="/dashboard" class="nav-link"><i class="fa fa-tachometer-alt me-2"></i> Dashboard</a></li>
+      <li class="nav-item"><a href="/auther" class="nav-link"><i class="fa fa-user-edit me-2"></i> Authors</a></li>
+      <li class="nav-item"><a href="/book" class="nav-link active"><i class="fa fa-book me-2"></i> Books</a></li>
+      <li class="nav-item"><a href="/Categories" class="nav-link"><i class="fa fa-list-alt me-2"></i> Categories</a></li>
+      <li class="nav-item"><a href="/users" class="nav-link"><i class="fa fa-users me-2"></i> Users</a></li>
+      <li class="nav-item"><a href="/Settings" class="nav-link"><i class="fa fa-cog me-2"></i> Settings</a></li>
+    </ul>
+
+    <div class="sidebar-footer mt-auto">
+      <p class="mb-0">Tabish Nasrati</p>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-grow-1 p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h3>Books List</h3>
+      <span class="badge bg-primary fs-6" id="bookCount">0 Books</span>
+    </div>
+
+    <!-- Add New Book Button -->
+    <div class="mb-3">
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addBookModal">
+        Add New Book
+      </button>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container">
+      <table class="table table-striped table-bordered align-middle">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Image</th>
+            <th>Download</th>
+            <th>View QA</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="bookTable"></tbody>
+      </table>
+    </div>
+
+    <!-- Add Book Modal -->
+    <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addBookModalLabel">Add New Book</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="bookForm" class="row g-3">
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="bookTitle" placeholder="Title" required>
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="bookAuthor" placeholder="Author" required>
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="bookCategory" placeholder="Category" required>
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="bookDescription" placeholder="Description" required>
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="bookImage" placeholder="Image URL" required>
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="bookDownload" placeholder="Download Link">
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="bookViewQA" placeholder="View QA Link">
+              </div>
+              <div class="col-md-12">
+                <button type="submit" class="btn btn-success w-100">Add Book</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Book Modal -->
+    <div class="modal fade" id="editBookModal" tabindex="-1" aria-labelledby="editBookModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editBookModalLabel">Edit Book</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="editBookForm" class="row g-3">
+              <input type="hidden" id="editBookIndex">
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="editBookTitle" placeholder="Title" required>
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="editBookAuthor" placeholder="Author" required>
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="editBookCategory" placeholder="Category" required>
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="editBookDescription" placeholder="Description" required>
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="editBookImage" placeholder="Image URL" required>
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="editBookDownload" placeholder="Download Link">
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="editBookViewQA" placeholder="View QA Link">
+              </div>
+              <div class="col-md-12">
+                <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Book Modal -->
+    <div class="modal fade" id="viewBookModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">View Book</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="viewBookBody"></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+ <script src="/js/book.js"></script>
+<!-- <script src="./book.js"></script> -->
+</body>
+</html>

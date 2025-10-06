@@ -9,12 +9,12 @@ const bookId = getBookIdFromURL();
 if (!bookId) console.error("Book ID not found in URL!");
 
 // المان‌های صفحه
-const bookTitle = document.getElementById("bookTitle");
-const bookAuthor = document.getElementById("bookAuthor");
-const bookCategory = document.getElementById("bookCategory");
-const bookPages = document.getElementById("bookPages");
+const bookTitle = document.getElementById("booksTitle");
+const bookAuthor = document.getElementById("booksAuthor");
+const bookCategory = document.getElementById("booksCategory");
+const bookPages = document.getElementById("booksPages");
 const description = document.getElementById("description");
-const bookImage = document.getElementById("bookImage");
+const bookImage = document.getElementById("booksImage");
 const startReading = document.getElementById("startReading");
 const downloadBtn = document.getElementById("downloadBtn");
 const toggleDesc = document.getElementById("toggleDesc");
@@ -34,7 +34,7 @@ function filenameFrom(value) {
 // بارگذاری اطلاعات کتاب
 async function loadBook(bookId) {
   try {
-    const res = await fetch(`/api/book/${bookId}`);
+    const res = await fetch(`/api/books/${bookId}`);
     if (!res.ok) throw new Error(`API error: ${res.status}`);
     const data = await res.json();
     console.log("loadBook data:", data);
@@ -102,7 +102,7 @@ reviewForm?.addEventListener("submit", async (e) => {
   const text = reviewText.value.trim();
   if (!text) return;
   try {
-    const response = await fetch(`/api/book/${bookId}/review`, {
+    const response = await fetch(`/api/books/${bookId}/review`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text }),

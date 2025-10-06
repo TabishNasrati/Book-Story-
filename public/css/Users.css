@@ -1,0 +1,179 @@
+/* 🌐 ساختار عمومی */
+html, body {
+  direction: ltr;
+  font-family: "Segoe UI", Tahoma, Arial, "Helvetica Neue", sans-serif;
+  background: #f4f6f9;
+  color: #222;
+  margin: 0;
+  padding: 0;
+}
+
+.wrapper {
+  gap: 0;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* 🌙 نوار کناری */
+.sidebar {
+  width: 250px;
+  background: linear-gradient(135deg, #67c0b9, #071422);
+  color: #fff;
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.sidebar .brand h2 {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.sidebar .divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 1rem 0;
+}
+
+.sidebar .nav-link {
+  color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  margin: 4px 0;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.sidebar .nav-link:hover {
+  background: linear-gradient(135deg, #67c0b9, #071422);
+  transform: translateX(4px);
+  text-decoration: none;
+}
+
+.sidebar .nav-link.active {
+  background: linear-gradient(135deg, #67c0b9, #071422);
+  color: #fff;
+  font-weight: bold;
+  box-shadow: inset 0 0 0 0px rgba(255,255,255,0.3);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* 📋 بخش جدول کاربران */
+main {
+  flex-grow: 1;
+  padding: 2rem;
+}
+
+main h3 {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.badge {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+/* 📦 کانتینر جدول با اسکرول */
+.table-container {
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  max-height: 420px;      /* 👈 محدودیت ارتفاع */
+  overflow-y: auto;       /* 👈 فعال‌سازی اسکرول عمودی */
+}
+
+/* ثابت ماندن سرستون جدول هنگام اسکرول */
+.table thead {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #0d9488;
+  color: #fff;
+}
+
+/* سطرها */
+.table tbody tr:hover {
+  background: linear-gradient(120deg, #67c0b9, #071422);
+}
+
+/* 🎨 دکمه‌ها */
+.btn {
+  border-radius: 30px;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-success {
+  background-color: #53b174;
+  border: none;
+}
+.btn-success:hover {
+  background-color: #0b7e74;
+}
+
+.btn-warning {
+  background-color: #facc15;
+  border: none;
+  color: #000;
+}
+.btn-warning:hover {
+  background-color: #eab308;
+  color: #000;
+}
+
+.btn-danger {
+  background-color: #ef4444;
+  border: none;
+}
+.btn-danger:hover {
+  background-color: #dc2626;
+}
+
+
+.modal-content {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.modal-header {
+  background-color: #0d9488;
+  color: #fff;
+  border-bottom: none;
+}
+
+.modal-footer {
+  border-top: none;
+}
+
+/* 📱 واکنش‌گرا */
+@media (max-width: 991px) {
+  .sidebar {
+    position: fixed;
+    left: -260px;
+    z-index: 1050;
+    height: 100%;
+  }
+  .sidebar.active {
+    left: 0;
+  }
+  .wrapper {
+    flex-direction: column;
+  }
+  main {
+    padding: 1rem;
+  }
+}
