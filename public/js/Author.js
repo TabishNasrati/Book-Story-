@@ -14,18 +14,18 @@ let editAuthorId = null;
 // ---------------- دریافت Authors از سرور ----------------
 async function fetchAuthors() {
   try {
-    const res = await fetch("/api/authors");
+    const res = await fetch("/api/admin/author"); // ✅ مسیر درست
     if (!res.ok) throw new Error("Failed to fetch authors");
     authors = await res.json();
     renderTable();
   } catch (err) {
-    console.error("Error loading authors:", err);
+    console.error("Error loading author:", err);
   }
 }
 
 // ---------------- بروزرسانی شمارنده ----------------
 function updateCount() {
-  document.getElementById("authorCount").textContent = `${authors.length} Authors`;
+  document.getElementById("authorCount").textContent = `${authors.length} Author`;
 }
 
 // ---------------- رندر جدول Authors ----------------
@@ -37,18 +37,18 @@ function renderTable() {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${index + 1}</td>
-      <td>${author.name}</td>
-      <td>${author.email}</td>
-      <td>
-        <button class="btn btn-sm btn-warning me-1" onclick="openEditAuthor(${author.id})">Edit</button>
-        <button class="btn btn-sm btn-danger" onclick="deleteAuthor(${author.id})">Delete</button>
-      </td>
+      <td>${author.author}</td>
     `;
     tbody.appendChild(tr);
   });
 
   updateCount();
 }
+
+function updateCount() {
+  document.getElementById("authorCount").textContent = `${authors.length} Authors`;
+}
+
 
 // ---------------- اضافه کردن Author جدید ----------------
 document.getElementById("authorForm").addEventListener("submit", async (e) => {
@@ -62,7 +62,7 @@ document.getElementById("authorForm").addEventListener("submit", async (e) => {
   if (!authorData.name || !authorData.email) return;
 
   try {
-    const res = await fetch("/api/authors", {
+    const res = await fetch("/api/admin/author", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(authorData),
@@ -104,7 +104,7 @@ document.getElementById("editAuthorForm").addEventListener("submit", async (e) =
   };
 
   try {
-    const res = await fetch(`/api/authors/${editAuthorId}`, {
+    const res = await fetch(`/api/admin/author/${editAuthorId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(authorData),
@@ -131,7 +131,7 @@ async function deleteAuthor(authorId) {
   if (!confirm(`Are you sure you want to delete ${author.name}?`)) return;
 
   try {
-    const res = await fetch(`/api/authors/${authorId}`, { method: "DELETE" });
+    const res = await fetch(`/api/admin/author/${authorId}`, { method: "DELETE" });
     if (!res.ok) throw new Error("Failed to delete author");
 
     fetchAuthors();

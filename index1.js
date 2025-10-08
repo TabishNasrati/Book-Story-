@@ -70,7 +70,7 @@ app.get("/register", (req, res) => res.render("register"));
 app.get("/main", (req, res) => res.render("main"));
 app.get("/single", (req, res) => res.render("single"));
 app.get("/dashboard", (req, res) => res.render("dashboard"));
-app.get("/auther", (req, res) => res.render("Auther"));
+app.get("/author", (req, res) => res.render("Author"));
 app.get("/book", (req, res) => res.render("book"));
 app.get("/Categories", (req, res) => res.render("Categories"));
 app.get("/users", (req, res) => res.render("users"));
@@ -370,9 +370,14 @@ if (typeof requireAdmin === "undefined") {
 // ---------------- Authors API ----------------
 
 // گرفتن همه Authors
-app.get('/api/admin/authors', requireLogin, requireAdmin, async (req, res) => {
+app.get('/api/admin/author', async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM authors ORDER BY id ASC");
+    const result = await pool.query(`
+      SELECT DISTINCT author
+      FROM books
+      WHERE author IS NOT NULL AND author <> ''
+      ORDER BY author ASC
+    `);
     res.json(result.rows);
   } catch (err) {
     console.error("Error fetching authors:", err);
@@ -380,8 +385,9 @@ app.get('/api/admin/authors', requireLogin, requireAdmin, async (req, res) => {
   }
 });
 
+
 // اضافه کردن Author جدید
-app.post('/api/admin/authors', requireLogin, requireAdmin, async (req, res) => {
+app.post('/api/admin/author', requireLogin, requireAdmin, async (req, res) => {
   const { name, email } = req.body;
   try {
     const result = await pool.query(
@@ -396,7 +402,7 @@ app.post('/api/admin/authors', requireLogin, requireAdmin, async (req, res) => {
 });
 
 // ویرایش Author
-app.put('/api/admin/authors/:id', requireLogin, requireAdmin, async (req, res) => {
+app.put('/api/admin/author/:id', requireLogin, requireAdmin, async (req, res) => {
   const { id } = req.params;
   const { name, email } = req.body;
   try {
@@ -412,7 +418,7 @@ app.put('/api/admin/authors/:id', requireLogin, requireAdmin, async (req, res) =
 });
 
 // حذف Author
-app.delete('/api/admin/authors/:id', requireLogin, requireAdmin, async (req, res) => {
+app.delete('/api/admin/author/:id', requireLogin, requireAdmin, async (req, res) => {
   const { id } = req.params;
   try {
     await pool.query("DELETE FROM authors WHERE id=$1", [id]);

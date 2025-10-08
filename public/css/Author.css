@@ -1,0 +1,72 @@
+body {
+  background-color: #f8f9fa;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background: linear-gradient(120deg, #67c0b9, #071422);
+  color: white;
+}
+.sidebar .nav-link {
+  color: #fff;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+  background: linear-gradient(120deg, #67c0b9, #071422);
+}
+.divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Table container */
+.table-container {
+  max-height: 450px; /* ارتفاع پنجره */
+  overflow-y: auto;
+  border-radius: 10px;
+  border: 1px solid #dee2e6;
+  background: white;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+table {
+  margin-bottom: 0;
+}
+
+/* Sticky header */
+thead th {
+  position: sticky;
+  top: 0;
+  background-color: #198754;
+  color: white;
+  z-index: 2;
+}
+
+/* Scrollbar style */
+.table-container::-webkit-scrollbar {
+  width: 8px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(120deg, #67c0b9, #071422);
+  border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(120deg, #67c0b9, #071422);
+}
+
+.brand h2 {
+  font-weight: bold;
+  color: #fff;
+}
+
+.wrapper {
+  height: 100vh;
+  overflow: hidden;
+}
+
+main {
+  background: #f8f9fa;
+  overflow-y: auto;
+}
