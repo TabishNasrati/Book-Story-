@@ -11,7 +11,7 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-image: url(/images/Tabish1.jpg);
+    background-image: url(/images/Tabish9.jpg);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -20,7 +20,7 @@
   .container {
     width: 380px;
     background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(9px);
     border-radius: 15px;
     padding: 40px 30px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.2);
