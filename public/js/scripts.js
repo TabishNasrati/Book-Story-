@@ -13,7 +13,7 @@ showRegister.addEventListener('click', (e) => {
 
 
 showLogin.addEventListener('click', (e) => {
-  e.preventDefault();
+  // e.preventDefault();
   registerForm.classList.remove('active');
   loginForm.classList.add('active');
 });

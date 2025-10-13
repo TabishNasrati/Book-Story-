@@ -581,71 +581,45 @@ app.delete("/api/books/:id", async (req, res) => {
 // };
 
 // ---------------- Categories API ----------------
-
-// گرفتن همه Categories و رندر صفحه
-app.get('/admin/Categories', requireLogin, requireAdmin, async (req, res) => {
+// گرفتن تمام دسته‌بندی‌ها از جدول books
+app.get("/api/admin/categories", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM Categories ORDER BY id ASC");
-    res.render("categories", { categories: result.rows });
+    const result = await pool.query(
+      "SELECT id, category, description FROM books ORDER BY id ASC"
+    );
+    res.json(result.rows);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error fetching categories" });
-  }
-});
-
-// ======================= Categories API =======================
-
-// 📌 گرفتن تمام دسته‌بندی‌ها
-app.get("/api/admin/Categories", async (req, res) => {
-  try {
-    const { rows } = await pool.query("SELECT * FROM categories ORDER BY id ASC");
-    res.json(rows);
-  } catch (err) {
-    console.error("❌ Error fetching Categories:", err);
+    console.error(" Error fetching categories:", err.message);
     res.status(500).json({ error: "Error fetching categories" });
   }
 });
 
-// 📌 اضافه کردن دسته‌بندی جدید
-app.post("/api/admin/Categories", async (req, res) => {
+// ویرایش دسته‌بندی در books
+app.put("/api/admin/categories/:id", async (req, res) => {
   try {
-    const { name, description } = req.body;
-    const { rows } = await pool.query(
-      "INSERT INTO Categories (name, description) VALUES ($1, $2) RETURNING id",
-      [name, description]
-    );
-    res.json({ message: "Category added successfully", id: rows[0].id });
-  } catch (err) {
-    console.error("❌ Error adding category:", err);
-    res.status(500).json({ error: "Error adding category" });
-  }
-});
-
-// 📌 ویرایش دسته‌بندی
-app.put("/api/admin/Categories/:id", async (req, res) => {
-  try {
-    const { name, description } = req.body;
+    const { category, description } = req.body;
     await pool.query(
-      "UPDATE categories SET name = $1, description = $2 WHERE id = $3",
-      [name, description, req.params.id]
+      "UPDATE books SET category=$1, description=$2 WHERE id=$3",
+      [category, description, req.params.id]
     );
     res.json({ message: "Category updated successfully" });
   } catch (err) {
-    console.error("❌ Error updating category:", err);
+    console.error(" Error updating category:", err.message);
     res.status(500).json({ error: "Error updating category" });
   }
 });
 
-// 📌 حذف دسته‌بندی
-app.delete("/api/admin/Categories/:id", async (req, res) => {
+// حذف دسته‌بندی از books
+app.delete("/api/admin/categories/:id", async (req, res) => {
   try {
-    await pool.query("DELETE FROM Categories WHERE id = $1", [req.params.id]);
+    await pool.query("DELETE FROM books WHERE id=$1", [req.params.id]);
     res.json({ message: "Category deleted successfully" });
   } catch (err) {
-    console.error("❌ Error deleting category:", err);
+    console.error(" Error deleting category:", err.message);
     res.status(500).json({ error: "Error deleting category" });
   }
 });
+
 
 
 // ---------------- Users API ----------------
@@ -667,7 +641,7 @@ app.delete("/api/admin/Categories/:id", async (req, res) => {
 //   }
 // }
 
-// 📌 گرفتن همه کاربران
+//گرفتن همه کاربران
 app.get('/api/admin/users', requireLogin, requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(
@@ -680,7 +654,7 @@ app.get('/api/admin/users', requireLogin, requireAdmin, async (req, res) => {
   }
 });
 
-// 📌 اضافه کردن کاربر جدید
+//اضافه کردن کاربر جدید
 app.post('/api/admin/users', requireLogin, requireAdmin, async (req, res) => {
   const { username, email, password } = req.body;
   try {
@@ -696,7 +670,7 @@ app.post('/api/admin/users', requireLogin, requireAdmin, async (req, res) => {
   }
 });
 
-// 📌 ویرایش کاربر
+// ویرایش کاربر
 app.put('/api/admin/users/:id', requireLogin, requireAdmin, async (req, res) => {
   const { id } = req.params;
   const { username, email, password } = req.body;
@@ -721,7 +695,7 @@ app.put('/api/admin/users/:id', requireLogin, requireAdmin, async (req, res) => 
   }
 });
 
-// 📌 حذف کاربر
+//  حذف کاربر
 app.delete('/api/admin/users/:id', requireLogin, requireAdmin, async (req, res) => {
   const { id } = req.params;
   try {
@@ -736,50 +710,53 @@ app.delete('/api/admin/users/:id', requireLogin, requireAdmin, async (req, res) 
 //----------------Settings-----------------
 
 // دریافت تنظیمات کاربر
+// دریافت تنظیمات کاربر/ادمین
 app.get("/api/Settings", requireLogin, async (req, res) => {
   try {
     const userId = req.session.userId;
-    const result = await pool.query("SELECT username, email, theme FROM user_Settings WHERE user_id=$1", [userId]);
-    
+
+    const result = await pool.query(
+      "SELECT username, email, theme FROM users WHERE id = $1",
+      [userId]
+    );
+
     if (result.rows.length === 0) {
       return res.json({ username: "", email: "", theme: "light" });
     }
 
     res.json(result.rows[0]);
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching settings:", err);
     res.status(500).json({ error: "Server error fetching settings" });
   }
 });
 
-// ذخیره یا آپدیت تنظیمات کاربر
+// ذخیره یا آپدیت تنظیمات کاربر/ادمین
 app.post("/api/Settings", requireLogin, async (req, res) => {
   try {
     const userId = req.session.userId;
     const { username, email, password, theme } = req.body;
 
+    // هش کردن پسورد در صورت وجود
     const hashedPassword = password ? await bcrypt.hash(password, 10) : null;
 
     const result = await pool.query(
-      `INSERT INTO user_Settings (user_id, username, email, password, theme)
-       VALUES ($1, $2, $3, $4, $5)
-       ON CONFLICT (user_id) DO UPDATE 
-       SET username = EXCLUDED.username,
-           email = EXCLUDED.email,
-           password = COALESCE(EXCLUDED.password, user_settings.password),
-           theme = EXCLUDED.theme
+      `UPDATE users 
+       SET username = $1,
+           email = $2,
+           password = COALESCE($3, password),
+           theme = $4
+       WHERE id = $5
        RETURNING *`,
-      [userId, username, email, hashedPassword, theme]
+      [username, email, hashedPassword, theme, userId]
     );
 
     res.json({ message: "Settings saved successfully", settings: result.rows[0] });
   } catch (err) {
-    console.error(err);
+    console.error("Error saving settings:", err);
     res.status(500).json({ error: "Server error saving settings" });
   }
 });
-
-
 
 
 
