@@ -1,63 +1,63 @@
-import express from "express";
-import path from "path";
-import { fileURLToPath } from "url";
-import pkg from "pg";
-import bcrypt from "bcrypt";
-import session from "express-session";
-import pgSession from "connect-pg-simple";
-import dotenv from "dotenv";
-import multer from "multer";
+import express from "express"; // فریم‌ورک اصلی برای ساخت سرور HTTP و مدیریت مسیرها (routes).
+import path from "path"; // برای کار با مسیر فایل‌ها در سیستم (مثل join و dirname).
+import { fileURLToPath } from "url"; //برای تبدیل import.meta.url به مسیر واقعی فایل (در ES Modules لازم است).
+import pkg from "pg"; // کتابخانهٔ رسمی Node.js برای اتصال به PostgreSQL.
+import bcrypt from "bcrypt"; //برای هش کردن (رمزگذاری) رمزهای عبور کاربران.
+import session from "express-session";// برای ایجاد و مدیریت session در Express.
+import pgSession from "connect-pg-simple"; //ذخیرهٔ sessionها در دیتابیس PostgreSQL.
+import dotenv from "dotenv"; // برای بارگذاری متغیرهای محیطی از فایل .env (مانند پسوردها یا پورت‌ها).
+import multer from "multer"; // برای آپلود فایل‌ها (مثل عکس کتاب یا پروفایل کاربر).
 import { render } from "ejs";
 
-dotenv.config();
+dotenv.config();//فایل ر  env. را می‌خواند تا اطلاعات مخفی مثل رمز دیتابیس را از آن بگیرد. 
 const { Pool } = pkg;
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // PostgreSQL Connection
-const pool = new Pool({
+const pool = new Pool({    // در اینجا یک Pool ساخته شده که مجموعه‌ای از connection‌ها را به دیتابیس مدیریت می‌کند.
   user: process.env.DB_USER || "postgres",
-  host: process.env.DB_HOST || "localhost",
+  host: process.env.DB_HOST || "localhost", //آدرس سرور دیتابیس
   database: process.env.DB_NAME || "bookstory",
   password: process.env.DB_PASS || "344030",
   port: process.env.DB_PORT || 5432,
 });
 
 pool
-  .connect()
-  .then(() => console.log("✅ Connected to PostgreSQL"))
-  .catch((err) => console.error(" Database connection error", err));
+  .connect() //  تلاش می‌کند به دیتابیس وصل شود.
+  .then(() => console.log(" Connected to PostgreSQL")) // اگر موفق شود، پیغام  Connected چاپ می‌شود.
+  .catch((err) => console.error(" Database connection error", err)); //  اگر خطا باشد (مثلاً رمز اشتباه باشد یا دیتابیس خاموش باشد) آن را در کنسول چاپ می‌کند.
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+const __filename = fileURLToPath(import.meta.url); //  __filename: مسیر کامل فایل جاری
+const __dirname = path.dirname(__filename);//   __dirname: مسیر پوشهٔ جاری
+ 
 // Session Store
-const PGStore = pgSession(session);
+const PGStore = pgSession(session); 
 app.use(
   session({
-    store: new PGStore({
+    store: new PGStore({ // می‌گوید که sessionها در PostgreSQL نگهداری شوند، در جدول "session".
       pool: pool,
       tableName: "session",
     }),
-    secret: process.env.SESSION_SECRET || "change_this_secret",
-    resave: false,
-    saveUninitialized: false,
+    secret: process.env.SESSION_SECRET || "change_this_secret", // کلید رمزگذاری session (باید قوی و محرمانه باشد).
+    resave: false, // اگر تغییری در session نبود، دوباره ذخیره‌اش نکن.
+    saveUninitialized: false, // خالی ذخیره نشود.
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
+      maxAge: 1000 * 60 * 60 * 24, // 1 day  // زمان ماندگاری session در مرورگر (اینجا ۱ روز). 
     },
   })
 );
 
-// Multer (for uploads if needed)
+// Multer (for uploads if needed)  //  پیکربندی multer برای آپلود فایل‌ها 
 const upload = multer({
-  dest: path.join(__dirname, "public", "uploads"),
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  dest: path.join(__dirname, "public", "uploads"), // dest: مسیر ذخیره‌ی فایل‌های آپلود شده را مشخص می‌کند.
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB  limits.fileSize: حداکثر حجم مجاز برای هر فایل را تعیین می‌کند.
 });
 
 // Middleware
-app.use(express.static(path.join(__dirname, "public")));
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.static(path.join(__dirname, "public"))); //   نمایش فایل‌های ثابت (CSS، عکس و...)
+app.use(express.urlencoded({ extended: true })); // خواندن داده‌های فرم‌ها
+app.use(express.json()); // خواندن داده‌های JSON
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -145,6 +145,58 @@ function requireAdmin(req, res, next) {
   }
   next();
 }
+
+
+// -------------------------به خاطر نظر ساخته شده 
+
+
+// گرفتن نظرات یک کتاب
+app.get('/api/books/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query(
+      'SELECT * FROM books WHERE id = $1',
+      [id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ message: "Book not found" });
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.get('/api/books/:id/review', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query(
+      'SELECT * FROM reviews WHERE book_id = $1 ORDER BY created_at DESC',
+      [id]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
+app.post('/api/books/:id/review', async (req, res) => {
+  const { id } = req.params;
+  const { text, username } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO reviews (book_id, username, text) VALUES ($1, $2, $3) RETURNING *',
+      [id, username || "Guest", text]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 
 

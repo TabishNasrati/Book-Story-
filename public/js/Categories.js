@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
       await fetch(`/api/admin/categories/${id}`, { method: "DELETE" });
       fetchCategories();
     } catch (err) {
-      console.error("❌ Error deleting category:", err);
+      console.error(" Error deleting category:", err);
     }
   };
 
@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
       fetchCategories();
       editIndex.value = "";
     } catch (err) {
-      console.error("❌ Error updating category:", err);
+      console.error(" Error updating category:", err);
     }
   });
 
