@@ -8,7 +8,9 @@ import pgSession from "connect-pg-simple"; //ذخیرهٔ sessionها در دی�
 import dotenv from "dotenv"; // برای بارگذاری متغیرهای محیطی از فایل .env (مانند پسوردها یا پورت‌ها).
 import multer from "multer"; // برای آپلود فایل‌ها (مثل عکس کتاب یا پروفایل کاربر).
 import { render } from "ejs";
+import * as pdf from "pdf-parse";
 
+// import fs from "fs";
 dotenv.config();//فایل ر  env. را می‌خواند تا اطلاعات مخفی مثل رمز دیتابیس را از آن بگیرد. 
 const { Pool } = pkg;
 const app = express();
@@ -118,6 +120,7 @@ app.post("/login", async (req, res) => {
     if (!match) return res.status(401).send("Invalid credentials");
 
     req.session.userId = user.id;
+    req.session.username = user.username || user.email; 
     req.session.role = user.role;
 
     if (user.role === "admin") {
@@ -147,55 +150,68 @@ function requireAdmin(req, res, next) {
 }
 
 
-// -------------------------به خاطر نظر ساخته شده 
+// ------------------------- Single page  به خاطر نظر ساخته شده 
 
 
-// گرفتن نظرات یک کتاب
-app.get('/api/books/:id', async (req, res) => {
+// -----------------  مسیرهای کتاب و نظر -----------------
+
+// گرفتن اطلاعات کتاب
+app.get("/api/books/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await pool.query(
-      'SELECT * FROM books WHERE id = $1',
-      [id]
-    );
-    if (result.rows.length === 0) return res.status(404).json({ message: "Book not found" });
+    const result = await pool.query("SELECT * FROM books WHERE id = $1", [id]);
+    if (result.rows.length === 0)
+      return res.status(404).json({ message: "Book not found" });
+
     res.json(result.rows[0]);
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching book:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-app.get('/api/books/:id/review', async (req, res) => {
+// گرفتن نظرات یک کتاب
+app.get("/api/books/:id/review", async (req, res) => {
   const { id } = req.params;
   try {
     const result = await pool.query(
-      'SELECT * FROM reviews WHERE book_id = $1 ORDER BY created_at DESC',
+      "SELECT * FROM reviews WHERE book_id = $1 ORDER BY created_at DESC",
       [id]
     );
     res.json(result.rows);
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching reviews:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-
-
-app.post('/api/books/:id/review', async (req, res) => {
+// افزودن نظر جدید
+app.post("/api/books/:id/review", async (req, res) => {
   const { id } = req.params;
-  const { text, username } = req.body;
+  const { text } = req.body;
+
+  // بررسی ورودی خالی
+  if (!text || text.trim() === "")
+    return res.status(400).json({ message: "Review text is required" });
+
   try {
+    // اگر کاربر لاگین کرده باشد، نامش را از سشن بگیر
+    const username =
+      req.session && req.session.username ? req.session.username : "Guest";
+
     const result = await pool.query(
-      'INSERT INTO reviews (book_id, username, text) VALUES ($1, $2, $3) RETURNING *',
-      [id, username || "Guest", text]
+      "INSERT INTO reviews (book_id, username, text) VALUES ($1, $2, $3) RETURNING *",
+      [id, username, text.trim()]
     );
-    res.json(result.rows[0]);
+
+    res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error(err);
+    console.error("Error inserting review:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
+
+
 
 
 

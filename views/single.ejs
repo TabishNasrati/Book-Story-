@@ -26,6 +26,7 @@
   
   
 
+
   <br>
 
       <div class="container">
@@ -33,15 +34,15 @@
           <img id="booksImage" src="./susan-q-yin-2JIvboGLeho-unsplash.jpg" alt="Book Cover">
           <div class="book-info">
             <h2 id="bookTitle">Sample Book Title</h2>
-            <p><strong>Author:</strong> <span id="bookAuthor">Tabish </span></p>
-            <p><strong>Category:</strong> <span id="bookCategory">Gold </span></p>
-            <p><strong></strong> <span id="bookPages">300</span></p>
+            <p><strong>Author :</strong> <span id="bookAuthor">Tabish </span></p>
+            <p><strong>Category :</strong> <span id="bookCategory">Gold </span></p>
+            <p><strong>Page : </strong> <span id="bookPages">300</span></p>
              <br>
             
             <div class="actions">
              <!-- Start Reading -->
               <a id="startReading" target="_blank" class="btn btn-primary">
-             📖 Start Reading
+              Start Reading
               </a>
                <!-- Download -->
           <a id="downloadBtn" class="btn btn-primary">
@@ -64,9 +65,13 @@
     
         <section class="reviews" id="reviews">
           <h3>Reader Reviews</h3>
-          <div class="review">Amazing book, very engaging — John</div>
-          <div class="review">Loved the flow of the story.— Sarah</div>
-    
+        
+          <!-- 🔹 ظرف اسکرول نظرات -->
+          <div class="reviews-list" id="reviewsList">
+            <div class="review">Amazing book, very engaging — John</div>
+            <div class="review">Loved the flow of the story.— Sarah</div>
+          </div>
+        
           <form id="reviewForm">
             <textarea id="reviewText" rows="3" placeholder="Write your review..."></textarea>
             <div class="actions">
@@ -75,6 +80,7 @@
             </div>
           </form>
         </section>
+        
       </div>
 
       <br>   
@@ -128,6 +134,7 @@
       </footer>
 
          
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
       <script src="/js/single.js"></script>
     
